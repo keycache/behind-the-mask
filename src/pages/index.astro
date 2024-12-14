@@ -1,0 +1,75 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Testimonials from '../components/Testimonials.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+
+// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
+// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+---
+
+<Layout title="Behind the Mask - Add Text Behind Objects in Images">
+	<Header />
+	
+	<main class="min-h-screen">
+		<div class="pt-24 px-4 py-16 sm:px-6 lg:px-8">
+			<div class="max-w-4xl mx-auto text-center">
+				<h1 class="text-4xl font-bold tracking-tight sm:text-6xl bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+					Behind the Mask
+				</h1>
+				
+				<p class="mt-6 text-lg leading-8 text-gray-700 dark:text-gray-300">
+					Transform your images by adding text that appears to be behind objects. Upload an image, define your text, and watch the magic happen as your text seamlessly integrates behind the subjects in your photo.
+				</p>
+
+				<div class="mt-10">
+					<label 
+						for="image-upload"
+						class="inline-flex cursor-pointer items-center justify-center rounded-lg bg-purple-600 px-6 py-3 text-sm font-medium text-white transition hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+					>
+						Upload Image
+						<input
+							type="file"
+							id="image-upload"
+							accept="image/*"
+							class="hidden"
+						/>
+					</label>
+				</div>
+
+				<div class="mt-16">
+					<div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+						<!-- Feature 1 -->
+						<div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+							<div class="text-center">
+								<h3 class="text-lg font-semibold text-gray-900 dark:text-white">Easy Upload</h3>
+								<p class="mt-2 text-gray-600 dark:text-gray-400">Simply drag and drop or select your image to get started</p>
+							</div>
+						</div>
+
+						<!-- Feature 2 -->
+						<div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+							<div class="text-center">
+								<h3 class="text-lg font-semibold text-gray-900 dark:text-white">Custom Text</h3>
+								<p class="mt-2 text-gray-600 dark:text-gray-400">Add your personalized text with custom fonts and styling</p>
+							</div>
+						</div>
+
+						<!-- Feature 3 -->
+						<div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+							<div class="text-center">
+								<h3 class="text-lg font-semibold text-gray-900 dark:text-white">Smart Positioning</h3>
+								<p class="mt-2 text-gray-600 dark:text-gray-400">AI-powered technology places your text naturally behind objects</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<Testimonials />
+	</main>
+
+	<Footer />
+</Layout>

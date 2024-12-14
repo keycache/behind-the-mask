@@ -1,0 +1,44 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="About - Behind the Mask">
+    <Header />
+    
+    <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-8">About Behind the Mask</h1>
+            
+            <div class="prose dark:prose-invert max-w-none">
+                <p class="text-lg text-gray-700 dark:text-gray-300 mb-6">
+                    Behind the Mask is an innovative web application that transforms the way you create visual content. Our platform uses advanced AI technology to detect objects in your images and seamlessly place text behind them, creating a unique and engaging visual effect.
+                </p>
+
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mt-8 mb-4">Our Mission</h2>
+                <p class="text-lg text-gray-700 dark:text-gray-300 mb-6">
+                    We believe in empowering creators with tools that make their content stand out. Our mission is to simplify the process of creating visually striking images that capture attention and convey messages in a unique way.
+                </p>
+
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mt-8 mb-4">How It Works</h2>
+                <div class="text-lg text-gray-700 dark:text-gray-300 mb-6">
+                    <ol class="list-decimal list-inside space-y-3">
+                        <li>Upload your image to our platform</li>
+                        <li>Our AI analyzes the image and detects objects</li>
+                        <li>Add your custom text and adjust its position</li>
+                        <li>The text is automatically placed behind the detected objects</li>
+                        <li>Download your finished creation</li>
+                    </ol>
+                </div>
+
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mt-8 mb-4">Technology</h2>
+                <p class="text-lg text-gray-700 dark:text-gray-300 mb-6">
+                    Behind the Mask uses state-of-the-art computer vision and AI technologies to provide accurate object detection and seamless text integration. Our platform is built with performance and user experience in mind, ensuring quick processing times and high-quality results.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <Footer />
+</Layout>

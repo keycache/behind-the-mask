@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="FAQ - Behind the Mask">
+    <Header />
+    
+    <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-8">Frequently Asked Questions</h1>
+            
+            <div class="space-y-8">
+                <div class="border-b border-gray-200 dark:border-gray-800 pb-8">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                        What types of images work best with Behind the Mask?
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Behind the Mask works best with images that have clear, distinct objects in the foreground. Photos with good contrast between objects and backgrounds typically yield the best results. We support common image formats including JPG, PNG, and WebP.
+                    </p>
+                </div>
+
+                <div class="border-b border-gray-200 dark:border-gray-800 pb-8">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                        How accurate is the object detection?
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Our AI-powered object detection is highly accurate for common objects and subjects. The system is continuously learning and improving. For best results, ensure your images are well-lit and the objects are clearly visible.
+                    </p>
+                </div>
+
+                <div class="border-b border-gray-200 dark:border-gray-800 pb-8">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                        Can I customize the text appearance?
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Yes! You can customize the text font, size, color, and position. We offer a variety of fonts and styling options to help you achieve the perfect look for your creation.
+                    </p>
+                </div>
+
+                <div class="border-b border-gray-200 dark:border-gray-800 pb-8">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                        What is the maximum image size I can upload?
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        We accept images up to 10MB in size. For optimal performance, we recommend using images with dimensions between 800x800 and 2000x2000 pixels.
+                    </p>
+                </div>
+
+                <div class="border-b border-gray-200 dark:border-gray-800 pb-8">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                        How long does processing take?
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Most images are processed within seconds. Processing time may vary depending on the image size and complexity, but typically takes no more than 10-15 seconds.
+                    </p>
+                </div>
+
+                <div class="pb-8">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                        Can I save my projects and edit them later?
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Currently, we process images in real-time and don't store your projects. We recommend saving your work locally once you're satisfied with the results. Project saving functionality is planned for a future update.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <Footer />
+</Layout>

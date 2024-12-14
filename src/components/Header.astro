@@ -1,0 +1,61 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import Logo from './Logo.astro';
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+    <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+            <div class="flex items-center">
+                <a href="/" class="hover:opacity-90 transition-opacity">
+                    <Logo />
+                </a>
+            </div>
+
+            <div class="hidden md:block">
+                <div class="flex items-center space-x-8">
+                    <a href="/about" class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">
+                        About
+                    </a>
+                    <a href="/faq" class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">
+                        FAQ
+                    </a>
+                    <ThemeToggle />
+                </div>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="md:hidden flex items-center space-x-4">
+                <ThemeToggle />
+                <button type="button" class="mobile-menu-button text-gray-700 dark:text-gray-300">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div class="hidden md:hidden mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/about" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">
+                    About
+                </a>
+                <a href="/faq" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">
+                    FAQ
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<script>
+    const mobileMenuButton = document.querySelector('.mobile-menu-button');
+    const mobileMenu = document.querySelector('.mobile-menu');
+
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+</script>

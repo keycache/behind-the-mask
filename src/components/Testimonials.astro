@@ -1,0 +1,93 @@
+---
+const testimonials = [
+    {
+        name: "Sarah Chen",
+        role: "Digital Artist",
+        image: "https://i.pravatar.cc/150?img=47",
+        content: "Behind the Mask has revolutionized my digital art workflow. The AI-powered text placement is incredibly accurate, saving me hours of manual editing work.",
+    },
+    {
+        name: "Marcus Rodriguez",
+        role: "Social Media Manager",
+        image: "https://i.pravatar.cc/150?img=68",
+        content: "Creating engaging social media content has never been easier. The intuitive interface and quick processing make it my go-to tool for creative posts.",
+    },
+    {
+        name: "Emily Thompson",
+        role: "Graphic Designer",
+        image: "https://i.pravatar.cc/150?img=45",
+        content: "The ability to seamlessly place text behind objects opens up so many creative possibilities. It's become an essential part of my design toolkit.",
+    }
+];
+---
+
+<section class="py-16 bg-gray-50 dark:bg-gray-800/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                What Our Users Say
+            </h2>
+            <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
+                Join thousands of creators who trust Behind the Mask for their creative projects
+            </p>
+        </div>
+
+        <div class="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {testimonials.map((testimonial) => (
+                <div class="relative">
+                    <!-- Decorative quotation mark -->
+                    <svg
+                        class="absolute -top-6 -left-4 h-16 w-16 text-purple-200 dark:text-purple-900 transform -rotate-12"
+                        fill="currentColor"
+                        viewBox="0 0 32 32"
+                        aria-hidden="true"
+                    >
+                        <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+                    </svg>
+
+                    <div class="relative rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-sm">
+                        <div class="relative z-10">
+                            <p class="text-gray-600 dark:text-gray-400">
+                                {testimonial.content}
+                            </p>
+                            <div class="mt-6 flex items-center">
+                                <img
+                                    class="h-12 w-12 rounded-full"
+                                    src={testimonial.image}
+                                    alt={testimonial.name}
+                                />
+                                <div class="ml-4">
+                                    <p class="font-medium text-gray-900 dark:text-white">
+                                        {testimonial.name}
+                                    </p>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                                        {testimonial.role}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        <div class="mt-16 text-center">
+            <div class="inline-flex items-center space-x-2 text-purple-600 dark:text-purple-400">
+                <span class="font-medium">Join our growing community</span>
+                <svg
+                    class="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
+                </svg>
+            </div>
+        </div>
+    </div>
+</section>
