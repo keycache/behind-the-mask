@@ -1,0 +1,96 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Upload - Behind the Mask">
+    <Header />
+    
+    <main class="min-h-screen pt-24 px-4 py-16 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h1 class="text-3xl font-bold tracking-tight sm:text-4xl bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    Upload Your Image
+                </h1>
+                <p class="mt-4 text-lg text-gray-700 dark:text-gray-300">
+                    Choose an image and get ready to add some creative text behind your subjects
+                </p>
+            </div>
+
+            <div class="mt-8">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                    <!-- Upload Area -->
+                    <div class="flex flex-col items-center justify-center w-full">
+                        <label 
+                            for="image-upload"
+                            class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer border-gray-300 dark:border-gray-600 hover:border-purple-500 dark:hover:border-purple-500"
+                        >
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg class="w-12 h-12 mb-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                                <p class="mb-2 text-lg text-gray-700 dark:text-gray-300">
+                                    <span class="font-semibold">Click to upload</span> or drag and drop
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    PNG, JPG or WEBP (MAX. 10MB)
+                                </p>
+                            </div>
+                            <input 
+                                id="image-upload" 
+                                type="file" 
+                                class="hidden" 
+                                accept="image/*"
+                            />
+                        </label>
+                    </div>
+
+                    <!-- Preview Area (hidden by default) -->
+                    <div id="preview-area" class="hidden mt-8">
+                        <div class="relative">
+                            <img id="image-preview" src="" alt="Preview" class="w-full rounded-lg" />
+                            <div class="mt-4">
+                                <label for="text-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Enter your text
+                                </label>
+                                <input
+                                    type="text"
+                                    id="text-input"
+                                    class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+                                    placeholder="Type your text here..."
+                                />
+                            </div>
+                            <button
+                                id="process-button"
+                                class="mt-4 w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+                            >
+                                Process Image
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <Footer />
+</Layout>
+
+<script>
+    const imageUpload = document.getElementById('image-upload') as HTMLInputElement;
+    const previewArea = document.getElementById('preview-area');
+    const imagePreview = document.getElementById('image-preview') as HTMLImageElement;
+
+    imageUpload?.addEventListener('change', (event) => {
+        const file = (event.target as HTMLInputElement).files?.[0];
+        if (file && previewArea && imagePreview) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target?.result as string;
+                previewArea.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
