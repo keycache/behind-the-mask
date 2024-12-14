@@ -8,20 +8,21 @@ import Footer from '../components/Footer.astro';
     <Header />
     
     <main class="min-h-screen pt-24 px-4 py-16 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto">
+        <div class="max-w-7xl mx-auto">
             <div class="text-center mb-12">
                 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                     Upload Your Image
                 </h1>
                 <p class="mt-4 text-lg text-gray-700 dark:text-gray-300">
-                    Choose an image and get ready to add some creative text behind your subjects
+                    Choose an image and customize your text placement
                 </p>
             </div>
 
-            <div class="mt-8">
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Upload and Preview Area -->
+                <div class="space-y-8">
                     <!-- Upload Area -->
-                    <div class="flex flex-col items-center justify-center w-full">
+                    <div id="upload-area" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
                         <label 
                             for="image-upload"
                             class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer border-gray-300 dark:border-gray-600 hover:border-purple-500 dark:hover:border-purple-500"
@@ -46,29 +47,49 @@ import Footer from '../components/Footer.astro';
                         </label>
                     </div>
 
-                    <!-- Preview Area (hidden by default) -->
-                    <div id="preview-area" class="hidden mt-8">
-                        <div class="relative">
-                            <img id="image-preview" src="" alt="Preview" class="w-full rounded-lg" />
-                            <div class="mt-4">
-                                <label for="text-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Enter your text
-                                </label>
-                                <input
-                                    type="text"
-                                    id="text-input"
-                                    class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
-                                    placeholder="Type your text here..."
-                                />
-                            </div>
-                            <button
-                                id="process-button"
-                                class="mt-4 w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
-                            >
-                                Process Image
-                            </button>
+                    <!-- Image Preview with Text Overlay -->
+                    <div id="preview-container" class="hidden relative bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 overflow-hidden">
+                        <div class="relative w-full aspect-video">
+                            <img 
+                                id="image-preview" 
+                                src="" 
+                                alt="Preview" 
+                                class="w-full h-full object-contain"
+                            />
+                            <div 
+                                id="text-overlay"
+                                class="absolute pointer-events-none select-none"
+                                style="display: none; top: 0; left: 0; width: 100%; height: 100%;"
+                            ></div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Text Controls Area -->
+                <div class="space-y-6">
+                    <!-- Add Text Button -->
+                    <button
+                        id="add-text-btn"
+                        class="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 mb-6"
+                    >
+                        Add New Text
+                    </button>
+
+                    <!-- Text Panels Container -->
+                    <div id="text-panels" class="space-y-6">
+                        <!-- Text panels will be added here dynamically -->
+                    </div>
+
+                    <!-- Process Button -->
+                    <button
+                        id="process-button"
+                        class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 mt-6"
+                    >
+                        Save Image
+                    </button>
+
+                    <!-- Hidden Canvas for Image Processing -->
+                    <canvas id="processing-canvas" class="hidden"></canvas>
                 </div>
             </div>
         </div>
@@ -78,19 +99,323 @@ import Footer from '../components/Footer.astro';
 </Layout>
 
 <script>
-    const imageUpload = document.getElementById('image-upload') as HTMLInputElement;
-    const previewArea = document.getElementById('preview-area');
-    const imagePreview = document.getElementById('image-preview') as HTMLImageElement;
+    interface TextSettings {
+        id: string;
+        content: string;
+        x: number;
+        y: number;
+        z: number;
+        fontSize: number;
+        fontFamily: string;
+        color: string;
+        rotation: number;
+    }
 
+    let texts: TextSettings[] = [];
+    let currentId = 0;
+
+    const imageUpload = document.getElementById('image-upload') as HTMLInputElement;
+    const previewContainer = document.getElementById('preview-container');
+    const imagePreview = document.getElementById('image-preview') as HTMLImageElement;
+    const textOverlay = document.getElementById('text-overlay') as HTMLDivElement;
+    const addTextBtn = document.getElementById('add-text-btn');
+    const textPanels = document.getElementById('text-panels');
+    const processButton = document.getElementById('process-button');
+    const canvas = document.getElementById('processing-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d');
+
+    function createTextPanel(textId: string): HTMLDivElement {
+        const panel = document.createElement('div');
+        panel.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 space-y-4';
+        panel.dataset.textId = textId;
+
+        panel.innerHTML = `
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Text ${textId}</h3>
+                <button class="delete-text-btn text-red-600 hover:text-red-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <!-- Text Input -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Text Content
+                    </label>
+                    <input
+                        type="text"
+                        class="text-input w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md"
+                        value="Sample Text"
+                    />
+                </div>
+
+                <!-- Position Controls -->
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">X Position</label>
+                        <input type="range" class="x-position w-full" min="-50" max="150" value="50" />
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Y Position</label>
+                        <input type="range" class="y-position w-full" min="-50" max="150" value="50" />
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Z Index</label>
+                        <input type="range" class="z-index w-full" min="-10" max="10" value="0" />
+                        <div class="text-sm text-gray-500 dark:text-gray-400 text-center z-index-value">0</div>
+                    </div>
+                </div>
+
+                <!-- Font Settings -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Font Family</label>
+                        <select class="font-family w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md">
+                            <option value="Arial">Arial</option>
+                            <option value="Helvetica">Helvetica</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Courier New">Courier New</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Font Size</label>
+                        <input type="number" class="font-size w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md" min="8" max="72" value="24" />
+                    </div>
+                </div>
+
+                <!-- Color and Rotation -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Text Color</label>
+                        <input type="color" class="text-color w-full h-10 p-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md" value="#000000" />
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rotation</label>
+                        <input type="range" class="rotation w-full" min="-180" max="180" value="0" />
+                        <div class="text-sm text-gray-500 dark:text-gray-400 text-center rotation-value">0°</div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add event listeners
+        const deleteBtn = panel.querySelector('.delete-text-btn');
+        deleteBtn?.addEventListener('click', () => {
+            texts = texts.filter(t => t.id !== textId);
+            panel.remove();
+            updateAllTextOverlays();
+        });
+
+        // Add input event listeners
+        const inputs = panel.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                updateTextSettings(textId, panel);
+            });
+        });
+
+        return panel;
+    }
+
+    function updateTextSettings(textId: string, panel: HTMLDivElement) {
+        const textSettings: TextSettings = {
+            id: textId,
+            content: (panel.querySelector('.text-input') as HTMLInputElement).value,
+            x: Number((panel.querySelector('.x-position') as HTMLInputElement).value),
+            y: Number((panel.querySelector('.y-position') as HTMLInputElement).value),
+            z: Number((panel.querySelector('.z-index') as HTMLInputElement).value),
+            fontSize: Number((panel.querySelector('.font-size') as HTMLInputElement).value),
+            fontFamily: (panel.querySelector('.font-family') as HTMLSelectElement).value,
+            color: (panel.querySelector('.text-color') as HTMLInputElement).value,
+            rotation: Number((panel.querySelector('.rotation') as HTMLInputElement).value)
+        };
+
+        // Update value displays
+        const rotationDisplay = panel.querySelector('.rotation-value');
+        if (rotationDisplay) {
+            rotationDisplay.textContent = `${textSettings.rotation}°`;
+        }
+
+        const zIndexDisplay = panel.querySelector('.z-index-value');
+        if (zIndexDisplay) {
+            zIndexDisplay.textContent = textSettings.z.toString();
+        }
+
+        // Update or add text settings
+        const index = texts.findIndex(t => t.id === textId);
+        if (index !== -1) {
+            texts[index] = textSettings;
+        } else {
+            texts.push(textSettings);
+        }
+
+        updateAllTextOverlays();
+    }
+
+    function updateAllTextOverlays() {
+        if (textOverlay) {
+            // Clear existing overlays
+            textOverlay.innerHTML = '';
+
+            // Create elements for each text
+            texts.forEach(text => {
+                const textElement = document.createElement('div');
+                textElement.classList.add('text-element');
+                textElement.textContent = text.content || 'Sample Text';
+                textElement.style.position = 'absolute';
+                textElement.style.fontFamily = text.fontFamily;
+                textElement.style.fontSize = `${text.fontSize}px`;
+                textElement.style.color = text.color;
+                textElement.style.transform = `translate(${text.x}%, ${text.y}%) rotate(${text.rotation}deg)`;
+                textElement.style.zIndex = text.z.toString();
+                textElement.style.whiteSpace = 'nowrap';
+                textElement.style.transition = 'all 0.2s ease-out';
+                textElement.style.transformOrigin = 'center center';
+
+                textOverlay.appendChild(textElement);
+            });
+        }
+    }
+
+    // Function to render text with proper styling
+    function renderText(ctx: CanvasRenderingContext2D, text: TextSettings, canvasWidth: number, canvasHeight: number) {
+        ctx.save();
+        
+        // Set font and color
+        ctx.font = `${text.fontSize}px ${text.fontFamily}`;
+        ctx.fillStyle = text.color;
+        
+        // Calculate position
+        const x = (canvasWidth * (text.x + 50)) / 100;  // Convert percentage to pixels
+        const y = (canvasHeight * (text.y + 50)) / 100;
+        
+        // Apply rotation
+        ctx.translate(x, y);
+        ctx.rotate((text.rotation * Math.PI) / 180);
+        
+        // Draw text
+        const metrics = ctx.measureText(text.content);
+        ctx.fillText(text.content, -metrics.width / 2, text.fontSize / 3);
+        
+        ctx.restore();
+    }
+
+    // Process and save image
+    async function processImage() {
+        if (!ctx || !imagePreview.complete) return;
+
+        // Set canvas size to match image
+        canvas.width = imagePreview.naturalWidth;
+        canvas.height = imagePreview.naturalHeight;
+
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw image
+        ctx.drawImage(imagePreview, 0, 0);
+
+        // Sort texts by z-index
+        const sortedTexts = [...texts].sort((a, b) => a.z - b.z);
+
+        // Draw each text
+        sortedTexts.forEach(text => {
+            renderText(ctx, text, canvas.width, canvas.height);
+        });
+
+        try {
+            // Convert canvas to blob
+            const blob = await new Promise<Blob>((resolve, reject) => {
+                canvas.toBlob(blob => {
+                    if (blob) {
+                        resolve(blob);
+                    } else {
+                        reject(new Error('Canvas to Blob conversion failed'));
+                    }
+                }, 'image/png');
+            });
+
+            // Create download link
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'behind-the-mask-image.png';
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Cleanup
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error saving image:', error);
+            alert('Error saving image. Please try again.');
+        }
+    }
+
+    // Add Text Button Handler
+    addTextBtn?.addEventListener('click', () => {
+        const textId = `text-${currentId++}`;
+        const panel = createTextPanel(textId);
+        textPanels?.appendChild(panel);
+        updateTextSettings(textId, panel);
+    });
+
+    // Add click handler for process button
+    processButton?.addEventListener('click', processImage);
+
+    // Wait for image to load before allowing processing
+    imagePreview.addEventListener('load', () => {
+        if (processButton) {
+            processButton.disabled = false;
+        }
+    });
+
+    // Initially disable process button
+    if (processButton) {
+        processButton.disabled = true;
+    }
+
+    // Handle image upload
     imageUpload?.addEventListener('change', (event) => {
         const file = (event.target as HTMLInputElement).files?.[0];
-        if (file && previewArea && imagePreview) {
+        if (file && previewContainer && imagePreview && textOverlay) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 imagePreview.src = e.target?.result as string;
-                previewArea.classList.remove('hidden');
+                previewContainer.classList.remove('hidden');
+                textOverlay.style.display = 'flex';
+                textOverlay.style.alignItems = 'center';
+                textOverlay.style.justifyContent = 'center';
+                addTextBtn?.click(); // Add first text automatically
             };
             reader.readAsDataURL(file);
+        }
+    });
+
+    // Handle drag and drop
+    const uploadArea = document.getElementById('upload-area');
+
+    uploadArea?.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-purple-500');
+    });
+
+    uploadArea?.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('border-purple-500');
+    });
+
+    uploadArea?.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-purple-500');
+        
+        if (e.dataTransfer?.files.length) {
+            imageUpload.files = e.dataTransfer.files;
+            const event = new Event('change');
+            imageUpload.dispatchEvent(event);
         }
     });
 </script>
