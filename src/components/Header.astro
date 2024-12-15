@@ -6,28 +6,34 @@ import Logo from './Logo.astro';
 <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
     <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
+            <!-- Logo -->
             <div class="flex items-center">
                 <a href="/" class="hover:opacity-90 transition-opacity">
                     <Logo />
                 </a>
             </div>
 
-            <div class="hidden md:block">
-                <div class="flex items-center space-x-8">
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex lg:items-center lg:space-x-6">
+                <div class="flex items-center space-x-6">
                     <a href="/about" class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">
                         About
                     </a>
                     <a href="/faq" class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">
                         FAQ
                     </a>
+                </div>
+                <div class="pl-6 border-l border-gray-200 dark:border-gray-700">
                     <ThemeToggle />
                 </div>
             </div>
 
-            <!-- Mobile menu button -->
-            <div class="md:hidden flex items-center space-x-4">
-                <ThemeToggle />
-                <button type="button" class="mobile-menu-button text-gray-700 dark:text-gray-300">
+            <!-- Mobile Navigation -->
+            <div class="lg:hidden flex items-center space-x-4">
+                <div class="flex items-center">
+                    <ThemeToggle />
+                </div>
+                <button type="button" class="mobile-menu-button p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                     </svg>
@@ -35,13 +41,13 @@ import Logo from './Logo.astro';
             </div>
         </div>
 
-        <!-- Mobile menu -->
-        <div class="hidden md:hidden mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="/about" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">
+        <!-- Mobile Menu -->
+        <div class="hidden lg:hidden mobile-menu absolute left-0 right-0 top-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+            <div class="py-2 px-4 max-w-7xl mx-auto">
+                <a href="/about" class="block py-2.5 px-4 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-gray-100 dark:hover:bg-gray-800">
                     About
                 </a>
-                <a href="/faq" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">
+                <a href="/faq" class="block py-2.5 px-4 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-gray-100 dark:hover:bg-gray-800">
                     FAQ
                 </a>
             </div>
@@ -49,13 +55,25 @@ import Logo from './Logo.astro';
     </nav>
 </header>
 
+<!-- Spacer to prevent content from being hidden under fixed header -->
+<div class="h-16"></div>
+
 <script>
     const mobileMenuButton = document.querySelector('.mobile-menu-button');
     const mobileMenu = document.querySelector('.mobile-menu');
 
     if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', () => {
+        mobileMenuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
             mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!mobileMenuButton.contains(event.target as Node) && 
+                !mobileMenu.contains(event.target as Node)) {
+                mobileMenu.classList.add('hidden');
+            }
         });
     }
 </script>
