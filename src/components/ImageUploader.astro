@@ -1,0 +1,70 @@
+---
+---
+
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <label 
+            id="upload-area"
+            for="image-upload"
+            class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer border-gray-300 dark:border-gray-600 hover:border-purple-500 dark:hover:border-purple-500"
+        >
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                <svg class="w-10 h-10 mb-3 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                <p class="mb-2 text-sm text-gray-700 dark:text-gray-300">
+                    <span class="font-semibold">Click to upload</span> or drag and drop
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                    PNG, JPG or WEBP (MAX. 10MB)
+                </p>
+            </div>
+            <input id="image-upload" type="file" class="hidden" accept="image/*" />
+        </label>
+    </div>
+</div>
+
+<script>
+    const imageUpload = document.getElementById('image-upload') as HTMLInputElement;
+    const uploadArea = document.getElementById('upload-area');
+
+    // Handle drag and drop
+    uploadArea?.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('border-purple-500');
+    });
+
+    uploadArea?.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('border-purple-500');
+    });
+
+    uploadArea?.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('border-purple-500');
+        
+        if (e.dataTransfer?.files.length) {
+            imageUpload.files = e.dataTransfer.files;
+            const event = new Event('change');
+            imageUpload.dispatchEvent(event);
+        }
+    });
+
+    // Emit custom event when image is selected
+    imageUpload?.addEventListener('change', async (event) => {
+        const file = (event.target as HTMLInputElement).files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const result = e.target?.result;
+                if (typeof result === 'string') {
+                    // Dispatch custom event with image data
+                    const imageSelectedEvent = new CustomEvent('imageSelected', {
+                        detail: { imageData: result }
+                    });
+                    document.dispatchEvent(imageSelectedEvent);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>

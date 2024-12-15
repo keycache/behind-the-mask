@@ -1,0 +1,85 @@
+---
+---
+
+<div id="editor-section" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Preview Column -->
+    <div class="lg:col-span-2">
+        <div id="preview-container" class="hidden">
+            <div class="relative w-full bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                <img id="image-preview" class="w-full h-auto" alt="Preview" />
+                <div id="text-overlay" class="absolute pointer-events-none select-none" style="display: none; top: 0; left: 0; width: 100%; height: 100%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls Column -->
+    <div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 space-y-6">
+            <button id="add-text-btn" class="hidden w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
+                Add New Text
+            </button>
+            
+            <div id="text-panels" class="space-y-6">
+                <!-- Text panels will be added here dynamically -->
+            </div>
+
+            <button id="process-button" class="hidden w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
+                Save Image
+            </button>
+        </div>
+        <canvas id="processing-canvas" class="hidden"></canvas>
+    </div>
+</div>
+
+<script>
+    import type { TextSettings } from '../types/editor';
+    import { setupImageProcessor } from '../lib/ImageProcessor';
+    import { setupTextOverlay } from '../lib/TextOverlay';
+
+    let texts: TextSettings[] = [];
+    let currentId = 0;
+
+    // Initialize components when image is selected
+    document.addEventListener('imageSelected', ((event: CustomEvent) => {
+        const imageData = event.detail.imageData;
+        const imagePreview = document.getElementById('image-preview') as HTMLImageElement;
+        const previewContainer = document.getElementById('preview-container');
+        const textOverlay = document.getElementById('text-overlay');
+        const editorSection = document.getElementById('editor-section');
+        const addTextBtn = document.getElementById('add-text-btn');
+        const processBtn = document.getElementById('process-button');
+        const textPanels = document.getElementById('text-panels');
+
+        if (imagePreview && previewContainer && textOverlay) {
+            imagePreview.src = imageData;
+            
+            // Show preview container and setup overlay
+            previewContainer.classList.remove('hidden');
+            textOverlay.style.display = 'block';
+            
+            // Show the editor section and buttons
+            if (editorSection) editorSection.classList.remove('hidden');
+            if (addTextBtn) addTextBtn.classList.remove('hidden');
+            if (processBtn) processBtn.classList.remove('hidden');
+            
+            // Clear existing text elements when new image is uploaded
+            textOverlay.innerHTML = '';
+            texts = [];
+            if (textPanels) {
+                textPanels.innerHTML = '';
+            }
+            currentId = 1;
+            
+            // Create initial text element after image loads
+            imagePreview.onload = () => {
+                if (texts.length === 0) {
+                    addTextBtn?.click();
+                }
+            };
+        }
+    }) as EventListener);
+
+    // Initialize image processing functionality
+    setupImageProcessor();
+    setupTextOverlay();
+</script>

@@ -76,5 +76,5 @@ const { title } = Astro.props;
     document.documentElement.classList.add('dark');
   }
 
-  window.localStorage.setItem('theme', theme);
+  window.localStorage.setItem('theme', theme || 'dark');
 </script>
