@@ -104,104 +104,159 @@ import Footer from '../components/Footer.astro';
     const canvas = document.getElementById('processing-canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
 
-    function createTextPanel(textId: string): HTMLDivElement {
+    function createTextPanel(textId: string) {
         const panel = document.createElement('div');
-        panel.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow space-y-4 mb-4';
         panel.dataset.panelId = textId;
         
         panel.innerHTML = `
-            <div class="space-y-4">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-medium">Text Settings</h3>
-                    <button class="delete-text text-red-600 hover:text-red-700">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Text Settings</h3>
+                    <button class="delete-text-btn text-red-600 hover:text-red-700">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
                     </button>
                 </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Text Content</label>
-                    <input type="text" class="text-input w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md" value="Sample Text" />
-                </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">X Position</label>
-                    <input type="range" class="x-position w-full" min="-50" max="150" value="0" />
-                    <div class="text-sm text-gray-500 dark:text-gray-400 text-center x-position-value">0%</div>
-                </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Y Position</label>
-                    <input type="range" class="y-position w-full" min="-50" max="150" value="0" />
-                    <div class="text-sm text-gray-500 dark:text-gray-400 text-center y-position-value">0%</div>
-                </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Z Index</label>
-                    <input type="range" class="z-index w-full" min="-10" max="10" value="0" />
-                    <div class="text-sm text-gray-500 dark:text-gray-400 text-center z-index-value">0</div>
-                </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Font Size</label>
-                    <input type="range" class="font-size w-full" min="12" max="120" value="48" />
-                    <div class="text-sm text-gray-500 dark:text-gray-400 text-center font-size-value">48px</div>
-                </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Font Family</label>
-                    <select class="font-family w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md">
-                        <option value="Arial">Arial</option>
-                        <option value="Times New Roman">Times New Roman</option>
-                        <option value="Courier New">Courier New</option>
-                        <option value="Georgia">Georgia</option>
-                        <option value="Verdana">Verdana</option>
-                    </select>
-                </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Color</label>
-                    <input type="color" class="text-color w-full h-10" value="#000000" />
-                </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rotation</label>
-                    <input type="range" class="rotation w-full" min="0" max="360" value="0" />
-                    <div class="text-sm text-gray-500 dark:text-gray-400 text-center rotation-value">0°</div>
+
+                <div class="space-y-4">
+                    <div>
+                        <input type="text" class="text-content w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white" placeholder="Enter text" value="Sample Text" />
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">X Position</label>
+                        <input type="range" class="x-position w-full" min="-50" max="150" value="0" />
+                        <div class="text-sm text-gray-500 dark:text-gray-400 text-center x-position-value">0%</div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Y Position</label>
+                        <input type="range" class="y-position w-full" min="-50" max="150" value="0" />
+                        <div class="text-sm text-gray-500 dark:text-gray-400 text-center y-position-value">0%</div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Z Index</label>
+                        <input type="range" class="z-index w-full" min="0" max="10" value="0" />
+                        <div class="text-sm text-gray-500 dark:text-gray-400 text-center z-index-value">0</div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Font Size</label>
+                        <input type="range" class="font-size w-full" min="12" max="120" value="48" />
+                        <div class="text-sm text-gray-500 dark:text-gray-400 text-center font-size-value">48px</div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Font Family</label>
+                        <select class="font-family w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white">
+                            <option value="Arial">Arial</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Verdana">Verdana</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Color</label>
+                        <input type="color" class="text-color w-full h-10 p-1 rounded-md border border-gray-300 dark:border-gray-600" value="#000000" />
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rotation</label>
+                        <input type="range" class="rotation w-full" min="-180" max="180" value="0" />
+                        <div class="text-sm text-gray-500 dark:text-gray-400 text-center rotation-value">0°</div>
+                    </div>
                 </div>
             </div>
         `;
-
-        // Add event listeners for all inputs
-        const inputs = panel.querySelectorAll('input, select');
-        inputs.forEach(input => {
-            input.addEventListener('input', () => {
-                const settings = getTextSettings(textId, panel);
-                updateTextOverlay(settings);
-                const index = texts.findIndex(t => t.id === textId);
-                if (index !== -1) {
-                    texts[index] = settings;
-                }
-            });
-        });
-
-        // Add delete button handler
-        const deleteBtn = panel.querySelector('.delete-text');
-        deleteBtn?.addEventListener('click', () => {
-            const textElement = document.querySelector(`[data-text-id="${textId}"]`);
-            textElement?.remove();
-            panel.remove();
-            texts = texts.filter(t => t.id !== textId);
-        });
-
+        
+        const textSettings = {
+            id: textId,
+            content: 'Sample Text',
+            x: 0,
+            y: 0,
+            z: 0,
+            fontSize: 48,
+            fontFamily: 'Arial',
+            color: '#000000',
+            rotation: 0
+        };
+        
+        texts.push(textSettings);
+        updateTextOverlay(textSettings);
+        setupPanelEventListeners(panel, textSettings);
+        
         return panel;
     }
 
-    function getTextSettings(textId: string, panel: HTMLDivElement): TextSettings {
-        return {
-            id: textId,
-            content: (panel.querySelector('.text-input') as HTMLInputElement).value,
-            x: Number((panel.querySelector('.x-position') as HTMLInputElement).value),
-            y: Number((panel.querySelector('.y-position') as HTMLInputElement).value),
-            z: Number((panel.querySelector('.z-index') as HTMLInputElement).value),
-            fontSize: Number((panel.querySelector('.font-size') as HTMLInputElement).value),
-            fontFamily: (panel.querySelector('.font-family') as HTMLSelectElement).value,
-            color: (panel.querySelector('.text-color') as HTMLInputElement).value,
-            rotation: Number((panel.querySelector('.rotation') as HTMLInputElement).value)
-        };
+    function setupPanelEventListeners(panel: HTMLElement, textSettings: TextSettings) {
+        // Text Content
+        const textInput = panel.querySelector('.text-content') as HTMLInputElement;
+        textInput?.addEventListener('input', (e) => {
+            textSettings.content = (e.target as HTMLInputElement).value;
+            updateTextOverlay(textSettings);
+        });
+
+        // X Position
+        const xPosition = panel.querySelector('.x-position') as HTMLInputElement;
+        xPosition?.addEventListener('input', (e) => {
+            textSettings.x = parseInt((e.target as HTMLInputElement).value);
+            updateTextOverlay(textSettings);
+        });
+
+        // Y Position
+        const yPosition = panel.querySelector('.y-position') as HTMLInputElement;
+        yPosition?.addEventListener('input', (e) => {
+            textSettings.y = parseInt((e.target as HTMLInputElement).value);
+            updateTextOverlay(textSettings);
+        });
+
+        // Z Index
+        const zIndex = panel.querySelector('.z-index') as HTMLInputElement;
+        zIndex?.addEventListener('input', (e) => {
+            textSettings.z = parseInt((e.target as HTMLInputElement).value);
+            updateTextOverlay(textSettings);
+        });
+
+        // Font Size
+        const fontSize = panel.querySelector('.font-size') as HTMLInputElement;
+        fontSize?.addEventListener('input', (e) => {
+            textSettings.fontSize = parseInt((e.target as HTMLInputElement).value);
+            updateTextOverlay(textSettings);
+        });
+
+        // Font Family
+        const fontFamily = panel.querySelector('.font-family') as HTMLSelectElement;
+        fontFamily?.addEventListener('change', (e) => {
+            textSettings.fontFamily = (e.target as HTMLSelectElement).value;
+            updateTextOverlay(textSettings);
+        });
+
+        // Color
+        const color = panel.querySelector('.text-color') as HTMLInputElement;
+        color?.addEventListener('input', (e) => {
+            textSettings.color = (e.target as HTMLInputElement).value;
+            updateTextOverlay(textSettings);
+        });
+
+        // Rotation
+        const rotation = panel.querySelector('.rotation') as HTMLInputElement;
+        rotation?.addEventListener('input', (e) => {
+            textSettings.rotation = parseInt((e.target as HTMLInputElement).value);
+            updateTextOverlay(textSettings);
+        });
+
+        // Delete Button
+        const deleteBtn = panel.querySelector('.delete-text-btn');
+        deleteBtn?.addEventListener('click', () => {
+            const textElement = document.querySelector(`[data-text-id="${textSettings.id}"]`);
+            textElement?.remove();
+            panel.remove();
+            texts = texts.filter(t => t.id !== textSettings.id);
+        });
     }
 
     function updateTextOverlay(textSettings: TextSettings) {
@@ -281,23 +336,6 @@ import Footer from '../components/Footer.astro';
         const textId = `text-${currentId++}`;
         const panel = createTextPanel(textId);
         textPanels?.appendChild(panel);
-        
-        // Initialize with centered position
-        const initialSettings = {
-            id: textId,
-            content: 'Sample Text',
-            x: 0,
-            y: 0,
-            z: 0,
-            fontSize: 48,
-            fontFamily: 'Arial',
-            color: '#000000',
-            rotation: 0
-        };
-        
-        // Create text element and update
-        updateTextOverlay(initialSettings);
-        texts.push(initialSettings);
     });
 
     // Function to render text with proper styling
