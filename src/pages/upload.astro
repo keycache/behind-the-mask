@@ -235,7 +235,7 @@ import Footer from '../components/Footer.astro';
         textElement.style.fontFamily = textSettings.fontFamily;
         
         // Scale font size relative to image height
-        const imageHeight = imagePreview.height || 1000;
+        let imageHeight = imagePreview.height || 1000;
         const scaleFactor = imageHeight / 1000;
         const scaledFontSize = textSettings.fontSize * scaleFactor;
         textElement.style.fontSize = `${scaledFontSize}px`;
@@ -243,13 +243,25 @@ import Footer from '../components/Footer.astro';
         textElement.style.color = textSettings.color;
         textElement.style.zIndex = textSettings.z.toString();
 
-        // Position relative to image center
+        // Set initial position at center
         textElement.style.position = 'absolute';
         textElement.style.left = '50%';
         textElement.style.top = '50%';
         
-        // Apply transforms for positioning and rotation
-        textElement.style.transform = `translate(-50%, -50%) translate(${textSettings.x}%, ${textSettings.y}%) rotate(${textSettings.rotation}deg)`;
+        // Get image dimensions for scaling
+        const imageWidth = imagePreview.width;
+        imageHeight = imagePreview.height;
+        
+        // Calculate pixel offsets based on percentages
+        const xOffset = (textSettings.x / 100) * imageWidth;
+        const yOffset = (textSettings.y / 100) * imageHeight;
+        
+        // Apply transform with pixel-based offsets
+        textElement.style.transform = `
+            translate(-50%, -50%)
+            translate(${xOffset}px, ${yOffset}px)
+            rotate(${textSettings.rotation}deg)
+        `;
 
         // Update displays
         const panel = document.querySelector(`[data-panel-id="${textSettings.id}"]`);
