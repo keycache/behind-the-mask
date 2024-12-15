@@ -7,9 +7,10 @@ import Footer from '../components/Footer.astro';
 <Layout title="Upload - Behind the Mask">
     <Header />
     
-    <main class="min-h-screen pt-24 px-4 py-16 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-12">
+    <main class="min-h-screen pt-24 px-4 py-8 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto space-y-8">
+            <!-- Title Section -->
+            <div class="text-center">
                 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                     Upload Your Image
                 </h1>
@@ -18,77 +19,56 @@ import Footer from '../components/Footer.astro';
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Upload and Preview Area -->
-                <div class="space-y-8">
-                    <!-- Upload Area -->
-                    <div id="upload-area" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                        <label 
-                            for="image-upload"
-                            class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer border-gray-300 dark:border-gray-600 hover:border-purple-500 dark:hover:border-purple-500"
-                        >
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg class="w-12 h-12 mb-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                </svg>
-                                <p class="mb-2 text-lg text-gray-700 dark:text-gray-300">
-                                    <span class="font-semibold">Click to upload</span> or drag and drop
-                                </p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    PNG, JPG or WEBP (MAX. 10MB)
-                                </p>
-                            </div>
-                            <input 
-                                id="image-upload" 
-                                type="file" 
-                                class="hidden" 
-                                accept="image/*"
-                            />
-                        </label>
-                    </div>
+            <!-- Upload Section -->
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                    <label 
+                        for="image-upload"
+                        class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer border-gray-300 dark:border-gray-600 hover:border-purple-500 dark:hover:border-purple-500"
+                    >
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg class="w-10 h-10 mb-3 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            <p class="mb-2 text-sm text-gray-700 dark:text-gray-300">
+                                <span class="font-semibold">Click to upload</span> or drag and drop
+                            </p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                PNG, JPG or WEBP (MAX. 10MB)
+                            </p>
+                        </div>
+                        <input id="image-upload" type="file" class="hidden" accept="image/*" />
+                    </label>
+                </div>
+            </div>
 
-                    <!-- Image Preview with Text Overlay -->
-                    <div id="preview-container" class="hidden relative bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 overflow-hidden">
-                        <div class="relative w-full aspect-video">
-                            <img 
-                                id="image-preview" 
-                                src="" 
-                                alt="Preview" 
-                                class="w-full h-full object-contain"
-                            />
-                            <div 
-                                id="text-overlay"
-                                class="absolute pointer-events-none select-none"
-                                style="display: none; top: 0; left: 0; width: 100%; height: 100%;"
-                            ></div>
+            <!-- Editor Section -->
+            <div id="editor-section" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Preview Column -->
+                <div class="lg:col-span-2">
+                    <div id="preview-container" class="hidden">
+                        <div class="relative w-full bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                            <img id="image-preview" class="w-full h-auto" alt="Preview" />
+                            <div id="text-overlay" class="absolute pointer-events-none select-none" style="display: none; top: 0; left: 0; width: 100%; height: 100%;"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Text Controls Area -->
-                <div class="space-y-6">
-                    <!-- Add Text Button -->
-                    <button
-                        id="add-text-btn"
-                        class="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 mb-6"
-                    >
-                        Add New Text
-                    </button>
+                <!-- Controls Column -->
+                <div>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 space-y-6">
+                        <button id="add-text-btn" class="hidden w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
+                            Add New Text
+                        </button>
+                        
+                        <div id="text-panels" class="space-y-6">
+                            <!-- Text panels will be added here dynamically -->
+                        </div>
 
-                    <!-- Text Panels Container -->
-                    <div id="text-panels" class="space-y-6">
-                        <!-- Text panels will be added here dynamically -->
+                        <button id="process-button" class="hidden w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
+                            Save Image
+                        </button>
                     </div>
-
-                    <!-- Process Button -->
-                    <button
-                        id="process-button"
-                        class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 mt-6"
-                    >
-                        Save Image
-                    </button>
-
-                    <!-- Hidden Canvas for Image Processing -->
                     <canvas id="processing-canvas" class="hidden"></canvas>
                 </div>
             </div>
@@ -419,22 +399,26 @@ import Footer from '../components/Footer.astro';
     }
 
     // Handle image upload
-    imageUpload?.addEventListener('change', (event) => {
+    imageUpload?.addEventListener('change', async (event) => {
         const file = (event.target as HTMLInputElement).files?.[0];
         if (file && previewContainer && imagePreview && textOverlay) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                if (typeof e.target?.result === 'string') {
-                    imagePreview.src = e.target.result;
+                const result = e.target?.result;
+                if (typeof result === 'string') {
+                    imagePreview.src = result;
                     
                     // Show preview container and setup overlay
                     previewContainer.classList.remove('hidden');
                     textOverlay.style.display = 'block';
-                    textOverlay.style.position = 'absolute';
-                    textOverlay.style.top = '0';
-                    textOverlay.style.left = '0';
-                    textOverlay.style.width = '100%';
-                    textOverlay.style.height = '100%';
+                    
+                    // Show the editor section and buttons
+                    const editorSection = document.getElementById('editor-section');
+                    if (editorSection) editorSection.classList.remove('hidden');
+                    const addTextBtn = document.getElementById('add-text-btn');
+                    const processBtn = document.getElementById('process-button');
+                    if (addTextBtn) addTextBtn.classList.remove('hidden');
+                    if (processBtn) processBtn.classList.remove('hidden');
                     
                     // Clear existing text elements when new image is uploaded
                     textOverlay.innerHTML = '';
