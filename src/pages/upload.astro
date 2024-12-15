@@ -146,10 +146,12 @@ import Footer from '../components/Footer.astro';
                 <div class="space-y-2">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">X Position</label>
                     <input type="range" class="x-position w-full" min="-50" max="150" value="0" />
+                    <div class="text-sm text-gray-500 dark:text-gray-400 text-center x-position-value">0%</div>
                 </div>
                 <div class="space-y-2">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Y Position</label>
                     <input type="range" class="y-position w-full" min="-50" max="150" value="0" />
+                    <div class="text-sm text-gray-500 dark:text-gray-400 text-center y-position-value">0%</div>
                 </div>
                 <div class="space-y-2">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Z Index</label>
@@ -159,6 +161,7 @@ import Footer from '../components/Footer.astro';
                 <div class="space-y-2">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Font Size</label>
                     <input type="range" class="font-size w-full" min="12" max="120" value="48" />
+                    <div class="text-sm text-gray-500 dark:text-gray-400 text-center font-size-value">48px</div>
                 </div>
                 <div class="space-y-2">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Font Family</label>
@@ -275,6 +278,21 @@ import Footer from '../components/Footer.astro';
             if (zIndexDisplay) {
                 zIndexDisplay.textContent = textSettings.z.toString();
             }
+
+            const xPosDisplay = panel.querySelector('.x-position-value');
+            if (xPosDisplay) {
+                xPosDisplay.textContent = `${textSettings.x}%`;
+            }
+
+            const yPosDisplay = panel.querySelector('.y-position-value');
+            if (yPosDisplay) {
+                yPosDisplay.textContent = `${textSettings.y}%`;
+            }
+
+            const fontSizeDisplay = panel.querySelector('.font-size-value');
+            if (fontSizeDisplay) {
+                fontSizeDisplay.textContent = `${textSettings.fontSize}px`;
+            }
         }
     }
 
@@ -332,6 +350,9 @@ import Footer from '../components/Footer.astro';
     // Process and save image
     async function processImage() {
         if (!ctx || !imagePreview.complete) return;
+
+        // Log text settings before processing
+        console.log('Text Settings at Save:', JSON.stringify(texts, null, 2));
 
         // Set canvas size to match image
         canvas.width = imagePreview.naturalWidth;
